@@ -26,6 +26,25 @@ print(index.as_query_engine().query("苹果去年的净利润是多少？"))
 
 每份报告是一个 `Document`，Markdown 表格原样保留，LLM 能直接读到真实的资产负债表 / 利润表 / 现金流量表。
 
+## 三个例子
+
+仓库里的 [`examples.py`](https://github.com/heubme2020/llama-index-readers-datasinking/blob/main/examples.py) 有三个可直接跑的例子。把 key 设成环境变量再跑：
+
+```bash
+export DATASINKING_API_KEY=你的免费key    # Windows：set DATASINKING_API_KEY=你的免费key
+python examples.py
+```
+
+1. **拉一份财报**——看 `Document` 长什么样（metadata + 全文）。
+2. **灌入 5 年财报**——苹果近 5 份共 62 万字的 `Document`，直接喂 `VectorStoreIndex.from_documents`。
+3. **跨公司对比**——茅台 vs 五粮液，搜「营业收入」把营收数字并排读出来：
+
+```python
+for sym, name in [("600519.SS", "茅台"), ("000858.SZ", "五粮液")]:
+    docs = reader.load_data(sym, limit=1)
+    # 茅台 → | 营业收入 | 90,703,260,964.48 | ...  ·  五粮液 → | 营业收入（元） | 28,416,674,541.77 | ...
+```
+
 ## API key / 限额 / 限速
 
 不填 key 也能用，但公共档限速，跑正式 RAG 请用（免费的）key。

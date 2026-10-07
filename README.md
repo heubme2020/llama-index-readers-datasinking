@@ -26,6 +26,25 @@ print(index.as_query_engine().query("What was Apple's net income last year?"))
 
 Each report becomes one `Document`; its Markdown tables are preserved, so the LLM can read the actual balance sheet / income statement / cash flow.
 
+## Three examples
+
+The repo's [`examples.py`](https://github.com/heubme2020/llama-index-readers-datasinking/blob/main/examples.py) has three runnable examples. Set your key as an env var and run:
+
+```bash
+export DATASINKING_API_KEY=your_free_key    # Windows: set DATASINKING_API_KEY=your_free_key
+python examples.py
+```
+
+1. **Fetch one filing** — see what a `Document` looks like (metadata + full text).
+2. **Load 5 years of filings** — 626k characters of Apple filings as 5 `Document`s, ready for `VectorStoreIndex.from_documents`.
+3. **Cross-company comparison** — search "营业收入" across Moutai vs Wuliangye and read the revenue figures side by side:
+
+```python
+for sym, name in [("600519.SS", "茅台"), ("000858.SZ", "五粮液")]:
+    docs = reader.load_data(sym, limit=1)
+    # 茅台 → | 营业收入 | 90,703,260,964.48 | ...  ·  五粮液 → | 营业收入（元） | 28,416,674,541.77 | ...
+```
+
 ## API key, quotas and rate limits
 
 You don't need a key to start, but the public tier is throttled — use a (free) key for real RAG pipelines.
