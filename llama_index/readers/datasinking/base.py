@@ -1,8 +1,8 @@
 """DataSinking document loader for LlamaIndex.
 
-把 DataSinking 的财报全文灌进 RAG：
+Load full-text financial reports into your RAG pipeline:
     reader = DataSinkingReader(api_key="...")
-    docs = reader.load_data("600519.SS", limit=3)
+    docs = reader.load_data("AAPL", limit=3)
 """
 from typing import List, Optional
 
@@ -10,11 +10,31 @@ import requests
 from llama_index.core import Document
 from llama_index.core.readers.base import BaseReader
 
+PRICING_URL = "https://datasink.ing/pricing"
+
+
+class QuotaError(RuntimeError):
+    """Raised on 429 (rate limit or quota) with tier info and an upgrade link."""
+
+
+def _quota_message(detail: str = "") -> str:
+    msg = (
+        "DataSinking rate limit / quota exceeded. Tiers:\n"
+        "  no key (public): 31 reports / 7 days / IP, ~1 request / 3 s\n"
+        "  free key:        8,191 reports / 7 days, 3 requests / s\n"
+        "  paid ($31/yr):   524,287 reports / 7 days, 31 requests / s\n"
+        f"  {PRICING_URL}"
+    )
+    if detail:
+        msg += f"\n(server: {detail})"
+    return msg
+
 
 class DataSinkingReader(BaseReader):
     """Load full-text financial reports from DataSinking as LlamaIndex Documents.
 
-    免费档可不填 api_key（走公共额度，31 篇/7 天/IP）；填 key 解锁 8191 篇/7 天。
+    Leave api_key empty to use the public quota (31 docs / 7 days / IP);
+    pass a free key to unlock 8,191 docs / 7 days.
     """
 
     BASE = "https://api.datasink.ing"
@@ -38,13 +58,20 @@ class DataSinkingReader(BaseReader):
             params["apikey"] = self.api_key
 
         r = requests.get(f"{self.BASE}/documents", params=params, timeout=60)
+        if r.status_code == 429:
+            detail = ""
+            try:
+                detail = r.json().get("detail", "")
+            except Exception:
+                pass
+            raise QuotaError(_quota_message(detail))
         r.raise_for_status()
         items = r.json().get("items", [])
 
         docs: List[Document] = []
         for it in items:
             body = it.get("content", "")
-            # 去掉 YAML frontmatter（--- ... ---），喂给 LLM 更干净
+            # Strip the YAML frontmatter (--- ... ---) so the body is clean for the LLM.
             if body.startswith("---"):
                 end = body.find("\n---", 3)
                 if end != -1:

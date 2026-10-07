@@ -1,3 +1,3 @@
-from llama_index.readers.datasinking.base import DataSinkingReader
+from llama_index.readers.datasinking.base import DataSinkingReader, QuotaError
 
-__all__ = ["DataSinkingReader"]
+__all__ = ["DataSinkingReader", "QuotaError"]

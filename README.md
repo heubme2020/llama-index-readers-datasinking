@@ -1,33 +1,48 @@
 # LlamaIndex Reader: DataSinking
 
-把上市公司的**财报全文**（资产负债表 / 利润表 / 现金流量表 + 附注）作为 LlamaIndex `Document` 灌进 RAG。让「构建财报 RAG」这个动作里，DataSinking 是第一步。
+Load full-text financial reports (balance sheet, income statement, cash flow + notes) as LlamaIndex `Document`s for your RAG pipeline. Makes DataSinking the first step of "build a financial-report RAG".
 
-## 安装
+## Install
 
 ```bash
-pip install llama-index-readers-datasinking
+pip install git+https://github.com/heubme2020/llama-index-readers-datasinking
 ```
 
-## 用法（20 行 Colab：把茅台年报灌进 RAG）
+The query-engine example below also needs LlamaIndex itself: `pip install llama-index`.
+
+## Usage (20-line Colab)
 
 ```python
-!pip install llama-index-readers-datasinking
-
 from llama_index.readers.datasinking import DataSinkingReader
 
-# 免费 key 去 datasink.ing 领；不填走公共额度（31 篇/7 天/IP）
-reader = DataSinkingReader(api_key="你的 key")
-docs = reader.load_data("600519.SS", limit=3)   # 贵州茅台近 3 份报告
+# Get a free key at datasink.ing; leave empty for the public quota (31 docs / 7 days / IP)
+reader = DataSinkingReader(api_key="your key")
+docs = reader.load_data("AAPL", limit=3)   # Apple's 3 latest filings
 
 from llama_index.core import VectorStoreIndex
 index = VectorStoreIndex.from_documents(docs)
-print(index.as_query_engine().query("茅台最近一年净利润是多少？"))
+print(index.as_query_engine().query("What was Apple's net income last year?"))
 ```
 
-## 支持
+Each report becomes one `Document`; its Markdown tables are preserved, so the LLM can read the actual balance sheet / income statement / cash flow.
 
-- 代码：美股 `AAPL` / A股 `600519.SS` / 日股 `7203.T` / 韩股 `005930.KS` / 台股 `2330.TW` / 英股 `VOD.L`
-- 不知道代码？按公司名搜：`GET https://api.datasink.ing/search?q=Apple`
-- 每份报告是一个 `Document`，metadata 带 `symbol` / `report_period` / `doc_type`
+## API key, quotas and rate limits
 
-API 文档：https://datasink.ing/docs
+You don't need a key to start, but the public tier is throttled — use a (free) key for real RAG pipelines.
+
+| Tier | Quota | Rate limit |
+|---|---|---|
+| No key (public) | 31 reports / 7 days / IP | ~1 request / 3 s |
+| Free key | 8,191 reports / 7 days | 3 requests / s |
+| Paid ($31/yr) | 524,287 reports / 7 days | 31 requests / s |
+
+- Quota counts **reports**, not requests — one report = one unit.
+- Hit a limit and you get a `QuotaError` carrying the tier table above plus the upgrade link (https://datasink.ing/pricing).
+
+## Supported symbols
+
+- US `AAPL` · China `600519.SS` · Japan `7203.T` · Korea `005930.KS` · Taiwan `2330.TW` · UK `VOD.L`
+- Don't know the ticker? Search by name: `GET https://api.datasink.ing/search?q=Apple`
+- Each report is a `Document` with metadata `symbol` / `report_period` / `doc_type`
+
+API docs: https://datasink.ing/docs
