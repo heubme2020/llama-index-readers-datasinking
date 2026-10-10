@@ -66,4 +66,4 @@ You don't need a key to start, but the public tier is throttled — use a (free)
 
 API docs: https://datasink.ing/docs
 
-**Earn $7 every year per referral** — recurring, PayPal, $31 minimum withdrawal: https://datasink.ing/affiliate
+**Earn $7 every purchase per referral** — recurring, PayPal, $31 minimum withdrawal: https://datasink.ing/affiliate
