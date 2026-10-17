@@ -15,7 +15,7 @@ pip install git+https://github.com/heubme2020/llama-index-readers-datasinking
 ```python
 from llama_index.readers.datasinking import DataSinkingReader
 
-# 免费 key 去 datasink.ing 领；不填走公共额度（31 篇/7 天/IP）
+# 免费 key 去 datasink.ing 领
 reader = DataSinkingReader(api_key="你的 key")
 docs = reader.load_data("AAPL", limit=3)   # 苹果最近 3 份财报
 
@@ -47,11 +47,10 @@ for sym, name in [("600519.SS", "茅台"), ("000858.SZ", "五粮液")]:
 
 ## API key / 限额 / 限速
 
-不填 key 也能用，但公共档限速，跑正式 RAG 请用（免费的）key。
+需要一个（免费的）API key——去 https://datasink.ing 领一个，跑正式 RAG 请用免费 key。
 
 | 档位 | 额度 | 限速 |
 |---|---|---|
-| 无 key（公共） | 7 天 31 篇 / IP | 约 3 秒 1 次 |
 | 免费 key | 7 天 8,191 篇 | 3 次/秒 |
 | 付费 $31/年 | 7 天 524,287 篇 | 31 次/秒 |
 

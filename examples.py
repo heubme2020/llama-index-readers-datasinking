@@ -5,7 +5,7 @@
     pip install llama-index-core
     python examples.py
 
-⚠️ 不填 key 走公共额度（约 3 秒/篇、7 天 31 篇）。跑多份建议设环境变量：
+⚠️ 需要一个免费 API key（去 datasink.ing 领）。设成环境变量再跑：
     export DATASINKING_API_KEY=你的免费key
 """
 import os

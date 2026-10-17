@@ -15,7 +15,7 @@ The query-engine example below also needs LlamaIndex itself: `pip install llama-
 ```python
 from llama_index.readers.datasinking import DataSinkingReader
 
-# Get a free key at datasink.ing; leave empty for the public quota (31 docs / 7 days / IP)
+# Get a free key at datasink.ing
 reader = DataSinkingReader(api_key="your key")
 docs = reader.load_data("AAPL", limit=3)   # Apple's 3 latest filings
 
@@ -47,11 +47,10 @@ for sym, name in [("600519.SS", "茅台"), ("000858.SZ", "五粮液")]:
 
 ## API key, quotas and rate limits
 
-You don't need a key to start, but the public tier is throttled — use a (free) key for real RAG pipelines.
+You need a (free) API key — get one at https://datasink.ing. Use the free key for real RAG pipelines.
 
 | Tier | Quota | Rate limit |
 |---|---|---|
-| No key (public) | 31 reports / 7 days / IP | ~1 request / 3 s |
 | Free key | 8,191 reports / 7 days | 3 requests / s |
 | Paid ($31/yr) | 524,287 reports / 7 days | 31 requests / s |
 

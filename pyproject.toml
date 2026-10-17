@@ -16,7 +16,7 @@ dev = [
 
 [project]
 name = "llama-index-readers-datasinking"
-version = "0.1.0"
+version = "0.1.1"
 description = "LlamaIndex reader for DataSinking — full-text financial reports as documents"
 authors = [{ name = "DataSinking", email = "support@datasink.ing" }]
 requires-python = ">=3.10,<4.0"

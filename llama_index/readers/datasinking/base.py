@@ -20,7 +20,6 @@ class QuotaError(RuntimeError):
 def _quota_message(detail: str = "") -> str:
     msg = (
         "DataSinking rate limit / quota exceeded. Tiers:\n"
-        "  no key (public): 31 reports / 7 days / IP, ~1 request / 3 s\n"
         "  free key:        8,191 reports / 7 days, 3 requests / s\n"
         "  paid ($31/yr):   524,287 reports / 7 days, 31 requests / s\n"
         f"  {PRICING_URL}"
@@ -33,8 +32,8 @@ def _quota_message(detail: str = "") -> str:
 class DataSinkingReader(BaseReader):
     """Load full-text financial reports from DataSinking as LlamaIndex Documents.
 
-    Leave api_key empty to use the public quota (31 docs / 7 days / IP);
-    pass a free key to unlock 8,191 docs / 7 days.
+    Requires a free API key (get one at https://datasink.ing); a free key unlocks
+    8,191 docs / 7 days.
     """
 
     BASE = "https://api.datasink.ing"
