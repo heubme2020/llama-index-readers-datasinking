@@ -5,7 +5,7 @@ Load full-text financial reports (balance sheet, income statement, cash flow + n
 ## Install
 
 ```bash
-pip install git+https://github.com/heubme2020/llama-index-readers-datasinking
+pip install llama-index-readers-datasinking
 ```
 
 The query-engine example below also needs LlamaIndex itself: `pip install llama-index`.

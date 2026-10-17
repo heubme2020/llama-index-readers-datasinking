@@ -5,7 +5,7 @@
 ## 安装
 
 ```bash
-pip install git+https://github.com/heubme2020/llama-index-readers-datasinking
+pip install llama-index-readers-datasinking
 ```
 
 下面 query-engine 的例子还需要 LlamaIndex 本体：`pip install llama-index`。

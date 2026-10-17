@@ -1,7 +1,7 @@
 """llama-index-readers-datasinking 示例：3 个例子。
 
 跑法：
-    pip install git+https://github.com/heubme2020/llama-index-readers-datasinking
+    pip install llama-index-readers-datasinking
     pip install llama-index-core
     python examples.py
 
